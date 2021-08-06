@@ -23,4 +23,4 @@ node_modules/
 *.sqlite
 
 # ignore config
-wp-config.php
+wp-config-*.php
