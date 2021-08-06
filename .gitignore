@@ -24,3 +24,6 @@ node_modules/
 
 # ignore config
 wp-config-*.php
+
+# vendor
+vendor/
