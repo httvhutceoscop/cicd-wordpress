@@ -3,6 +3,6 @@
         "guzzlehttp/guzzle": "^6.3"
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "vendor/bin/phpunit"
     }
 }
