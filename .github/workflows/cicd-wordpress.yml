@@ -14,7 +14,8 @@ jobs:
       matrix:
         operating-system: [ubuntu-latest]
         php-versions: ['7.3']
-        db_name: ['wp_test']
+        mysql-version: ['5.7']
+        db_name: ['testdb']
         db_password: ['123456']
 
     steps:
@@ -32,12 +33,26 @@ jobs:
     - name: Check PHP Version
       run: php -v
 
-    - name: Set up MySQL 5.7
-      uses: mirromutth/mysql-action@master
+    - name: Set up MySQL
+    - uses: ankane/setup-mysql@v1
       with:
-        mysql version: 5.7
-        mysql database: ${{ matrix.db_name }}
-        mysql root password: ${{ matrix.db_password }}
+        mysql-version: ${{ matrix.mysql-version }}
+        database: ${{ matrix.db_name }}
+
+    - run: mysql --version
+    - run: mysql -e 'SELECT VERSION()'
+    - run: mysql -e 'SELECT CURRENT_USER()'
+    - run: mysql -e 'SELECT DATABASE()'
+    - run: mysql -e "SHOW VARIABLES LIKE 'socket'"
+    - run: mysqladmin create testdb2
+    - run: mysql -D testdb -e 'SELECT DATABASE()'
+
+    # - name: Set up MySQL 5.7
+    #   uses: mirromutth/mysql-action@master
+    #   with:
+    #     mysql version: 5.7
+    #     mysql database: ${{ matrix.db_name }}
+    #     mysql root password: ${{ matrix.db_password }}
 
     - name: Check MySQL Version
       run: mysql -V
