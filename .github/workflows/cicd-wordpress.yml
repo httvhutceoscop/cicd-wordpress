@@ -14,6 +14,8 @@ jobs:
       matrix:
         operating-system: [ubuntu-latest]
         php-versions: ['7.3']
+        db_name: ['wordpress_test']
+        db_password: ['123456']
 
     steps:
     - uses: actions/checkout@v2
@@ -30,11 +32,21 @@ jobs:
     - name: Check PHP Version
       run: php -v
 
+    - name: Set up MySQL 5.7
+      uses: mirromutth/mysql-action@master
+      with:
+        mysql version: 5.7
+        mysql database: ${{ matrix.db_name }}
+        mysql root password: ${{ matrix.db_password }}
+
+    - name: Check MySQL Version
+      run: mysql -V
+
     - name: Composer install
       run: composer install --optimize-autoloader --prefer-dist
     
     - name: Install WP Tests
-      run: bash ./wp-content/plugins/sentius-map/bin/install-wp-tests.sh wordpress_test root root localhost latest
+      run: bash ./wp-content/plugins/sentius-map/bin/install-wp-tests.sh ${{ matrix.db_name }} root ${{ matrix.db_password }} localhost latest
       
     - name: phpunit tests
       run: ./vendor/bin/phpunit
