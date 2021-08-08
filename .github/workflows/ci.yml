@@ -58,7 +58,7 @@ jobs:
     - name: Install WP Tests
       run: bash ./wp-content/plugins/sentius-map/bin/install-wp-tests.sh ${{ matrix.db_name }} ${{ matrix.db_user }} ${{ matrix.db_password }} ${{ matrix.db_host }} ${{ matrix.wp_version }}
 
-    - name: phpunit wp-content/plugins/*
+    - name: Run tests
       run: |
         cd wp-content/plugins/sentius-map
         phpunit
