@@ -20,7 +20,7 @@ jobs:
         db_user: ['root']
         db_password: ["''"]
         db_host: ['localhost']
-        wp_version: ['latest']
+        wp_version: ['5.2']
 
     steps:
     - uses: actions/checkout@v2
@@ -56,6 +56,7 @@ jobs:
         wget https://phar.phpunit.de/phpunit-7.5.9.phar
         chmod +x phpunit-7.5.9.phar
         sudo mv phpunit-7.5.9.phar /usr/local/bin/phpunit
+        phpunit --version
 
     - name: Install WP Tests
       run: bash ./wp-content/plugins/sentius-map/bin/install-wp-tests.sh ${{ matrix.db_name }} ${{ matrix.db_user }} ${{ matrix.db_password }} ${{ matrix.db_host }} ${{ matrix.wp_version }}
