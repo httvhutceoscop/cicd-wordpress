@@ -28,7 +28,7 @@ jobs:
         mysql-version: ['5.7']
         db_name: ['testdb']
         db_user: ['root']
-        db_password: ['']
+        db_password: ["''"]
         db_host: ['localhost']
 
     steps:
