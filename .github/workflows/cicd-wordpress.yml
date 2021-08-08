@@ -40,7 +40,7 @@ jobs:
         mysql-version: ${{ matrix.mysql-version }}
         database: ${{ matrix.db_name }}
 
-    - run: mysql -e 'UPDATE mysql.user SET Password=PASSWORD("123456") where USER="root"'
+    - run: mysql -e 'UPDATE mysql.user SET PASSWORD = PASSWORD("123456") where USER="root"'
     # - run: telnet localhost 3306
 
     # - run: mysql --version
