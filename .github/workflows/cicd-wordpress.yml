@@ -16,6 +16,7 @@ jobs:
         php-versions: ['7.3']
         mysql-version: ['5.7']
         db_name: ['testdb']
+        db_user: ['runner']
         db_password: ['123456']
 
     steps:
@@ -39,13 +40,15 @@ jobs:
         mysql-version: ${{ matrix.mysql-version }}
         database: ${{ matrix.db_name }}
 
-    - run: mysql --version
-    - run: mysql -e 'SELECT VERSION()'
-    - run: mysql -e 'SELECT CURRENT_USER()'
-    - run: mysql -e 'SELECT DATABASE()'
-    - run: mysql -e "SHOW VARIABLES LIKE 'socket'"
-    - run: mysqladmin create testdb2
-    - run: mysql -D testdb -e 'SELECT DATABASE()'
+    - name: Check MySQL queries
+      run: |
+        mysql --version
+        mysql -e 'SELECT VERSION()'
+        mysql -e 'SELECT CURRENT_USER()'
+        mysql -e 'SELECT DATABASE()'
+        mysql -e "SHOW VARIABLES LIKE 'socket'"
+        mysqladmin create testdb2
+        mysql -D testdb -e 'SELECT DATABASE()'
 
     # - name: Set up MySQL 5.7
     #   uses: mirromutth/mysql-action@master
@@ -61,7 +64,7 @@ jobs:
       run: composer install --optimize-autoloader --prefer-dist
     
     - name: Install WP Tests
-      run: bash ./wp-content/plugins/sentius-map/bin/install-wp-tests.sh ${{ matrix.db_name }} root ${{ matrix.db_password }} localhost latest
+      run: bash ./wp-content/plugins/sentius-map/bin/install-wp-tests.sh ${{ matrix.db_name }} ${{ matrix.db_user }} ${{ matrix.db_password }} localhost latest
       
     - name: phpunit tests
       run: ./vendor/bin/phpunit
