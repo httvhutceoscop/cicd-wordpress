@@ -42,10 +42,7 @@ jobs:
       uses: shivammathur/setup-php@v1
       with:
         php-version: ${{ matrix.php-versions }}
-        # extension-csv: mbstring, intl #optional, setup extensions
-        # ini-values-csv: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
         coverage: xdebug #optional, setup coverage driver
-        # pecl: false #optional, setup PECL
 
     - name: Composer install
       run: |
@@ -61,27 +58,6 @@ jobs:
     - name: Install WP Tests
       run: bash ./wp-content/plugins/sentius-map/bin/install-wp-tests.sh ${{ matrix.db_name }} ${{ matrix.db_user }} ${{ matrix.db_password }} ${{ matrix.db_host }} ${{ matrix.wp_version }}
 
-    - name: phpunit tests
+    - name: phpunit wp-content/plugins/*
       run: |
         phpunit wp-content/plugins/sentius-map
-
-    # # - name: Validate composer.json and composer.lock
-    # #   run: composer validate --strict
-
-    # # - name: Cache Composer packages
-    # #   id: composer-cache
-    # #   uses: actions/cache@v2
-    # #   with:
-    # #     path: vendor
-    # #     key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-    # #     restore-keys: |
-    # #       ${{ runner.os }}-php-
-
-    # # - name: Install dependencies
-    # #   run: composer install --prefer-dist --no-progress
-
-    # # # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # # # Docs: https://getcomposer.org/doc/articles/scripts.md
-
-    # # - name: Run test suite
-    # #   run: composer run-script test
