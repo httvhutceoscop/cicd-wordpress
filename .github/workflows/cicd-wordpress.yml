@@ -26,7 +26,7 @@ jobs:
         operating-system: [ubuntu-18.04]
         php-versions: ['7.3']
         mysql-version: ['5.7']
-        db_name: ['testdb1']
+        db_name: ['testdb2']
         db_user: ['root']
         db_password: ["''"]
         db_host: ['localhost']
@@ -38,7 +38,7 @@ jobs:
     - uses: ankane/setup-mysql@v1
       with:
         mysql-version: ${{ matrix.mysql-version }}
-        database: ${{ matrix.db_name }}
+        # database: ${{ matrix.db_name }}
 
     # - run: mysql --version
     # - run: mysql -e 'SELECT VERSION()'
