@@ -20,6 +20,7 @@ jobs:
         db_user: ['root']
         db_password: ["''"]
         db_host: ['localhost']
+        wp_version: ['latest']
 
     steps:
     - uses: actions/checkout@v2
@@ -46,19 +47,14 @@ jobs:
         coverage: xdebug #optional, setup coverage driver
         pecl: false #optional, setup PECL
 
-    - name: Check PHP Version
-      run: php -v
-
-    - name: Install SVN Server
-      run: |
-        svn -h
-
     - name: Composer install
-      run: composer install --optimize-autoloader --prefer-dist
+      run: |
+        composer global require "phpunit/phpunit=4.8.*|5.7.*"
+        composer install --optimize-autoloader --prefer-dist
     
     - name: Install WP Tests
-      run: bash ./wp-content/plugins/sentius-map/bin/install-wp-tests.sh ${{ matrix.db_name }} ${{ matrix.db_user }} ${{ matrix.db_password }} ${{ matrix.db_host }} latest
-      
+      run: bash ./wp-content/plugins/sentius-map/bin/install-wp-tests.sh ${{ matrix.db_name }} ${{ matrix.db_user }} ${{ matrix.db_password }} ${{ matrix.db_host }} ${{ matrix.wp_version }}
+
     - name: phpunit tests
       run: ./vendor/bin/phpunit ./wp-content/plugins/sentius-map/tests/test-sample.php
 
