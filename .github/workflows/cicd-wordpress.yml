@@ -34,6 +34,23 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    # - name: Set up MySQL
+    - uses: ankane/setup-mysql@v1
+      with:
+        mysql-version: ${{ matrix.mysql-version }}
+        database: ${{ matrix.db_name }}
+
+    - run: mysql -e 'Password=PASSWORD("123456") where USER="root"'
+    # - run: telnet localhost 3306
+
+    # - run: mysql --version
+    # - run: mysql -e 'SELECT VERSION()'
+    # - run: mysql -e 'SELECT CURRENT_USER()'
+    # - run: mysql -e 'SELECT DATABASE()'
+    # - run: mysql -e "SHOW VARIABLES LIKE 'socket'"
+    # - run: mysqladmin create testdb2
+    # - run: mysql -D testdb -e 'SELECT DATABASE()'
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v1
       with:
@@ -45,23 +62,6 @@ jobs:
 
     - name: Check PHP Version
       run: php -v
-
-    # - name: Set up MySQL
-    - uses: ankane/setup-mysql@v1
-      with:
-        mysql-version: ${{ matrix.mysql-version }}
-        database: ${{ matrix.db_name }}
-
-    - run: telnet localhost 3306
-    - run: mysql -e 'Password=PASSWORD('123456') where USER='root''
-
-    # - run: mysql --version
-    # - run: mysql -e 'SELECT VERSION()'
-    # - run: mysql -e 'SELECT CURRENT_USER()'
-    # - run: mysql -e 'SELECT DATABASE()'
-    # - run: mysql -e "SHOW VARIABLES LIKE 'socket'"
-    # - run: mysqladmin create testdb2
-    # - run: mysql -D testdb -e 'SELECT DATABASE()'
 
     - name: Composer install
       run: composer install --optimize-autoloader --prefer-dist
