@@ -10,23 +10,13 @@ jobs:
   build:
 
     runs-on: ${{ matrix.operating-system }}
-    # services:
-    #   mysql:
-    #     image: mysql:5.7
-    #     env:
-    #       MYSQL_HOST: ${{ matrix.db_host }}
-    #       MYSQL_DB: ${{ matrix.db_name }}
-    #       MYSQL_USER: root
-    #       # MYSQL_ALLOW_EMPTY_PASSWORD: yes
-    #       MYSQL_PASSWORD: ${{ matrix.db_password }}
-    #     ports:
-    #       - "3306:3306"
+
     strategy:
       matrix:
         operating-system: [ubuntu-18.04]
         php-versions: ['7.3']
         mysql-version: ['5.7']
-        db_name: ['testdb2']
+        db_name: ['testdb3']
         db_user: ['root']
         db_password: ["''"]
         db_host: ['localhost']
@@ -38,7 +28,6 @@ jobs:
     - uses: ankane/setup-mysql@v1
       with:
         mysql-version: ${{ matrix.mysql-version }}
-        # database: ${{ matrix.db_name }}
 
     # - run: mysql --version
     # - run: mysql -e 'SELECT VERSION()'
@@ -60,6 +49,10 @@ jobs:
     - name: Check PHP Version
       run: php -v
 
+    - name: Install SVN Server
+      run: |
+        svn -h
+
     - name: Composer install
       run: composer install --optimize-autoloader --prefer-dist
     
@@ -67,7 +60,7 @@ jobs:
       run: bash ./wp-content/plugins/sentius-map/bin/install-wp-tests.sh ${{ matrix.db_name }} ${{ matrix.db_user }} ${{ matrix.db_password }} ${{ matrix.db_host }} latest
       
     - name: phpunit tests
-      run: ./vendor/bin/phpunit
+      run: ./vendor/bin/phpunit ./wp-content/plugins/sentius-map/tests/test-sample.php
 
     # - name: Install Apache
     #   run: |
