@@ -10,13 +10,24 @@ jobs:
   build:
 
     runs-on: ${{ matrix.operating-system }}
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_HOST: localhost
+          MYSQL_DB: ${{ matrix.db_name }}
+          MYSQL_USER: root
+          # MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_PASSWORD: ${{ matrix.db_password }}
+        ports:
+          - "3306:3306"
     strategy:
       matrix:
         operating-system: [ubuntu-18.04]
         php-versions: ['7.3']
         mysql-version: ['5.7']
         db_name: ['testdb']
-        db_user: ['runner']
+        db_user: ['root']
         db_password: ['123456']
 
     steps:
@@ -35,30 +46,18 @@ jobs:
       run: php -v
 
     # - name: Set up MySQL
-    - uses: ankane/setup-mysql@v1
-      with:
-        mysql-version: ${{ matrix.mysql-version }}
-        database: ${{ matrix.db_name }}
-
-    - name: Check MySQL queries
-      run: |
-        mysql --version
-        mysql -e 'SELECT VERSION()'
-        mysql -e 'SELECT CURRENT_USER()'
-        mysql -e 'SELECT DATABASE()'
-        mysql -e "SHOW VARIABLES LIKE 'socket'"
-        mysqladmin create testdb2
-        mysql -D testdb -e 'SELECT DATABASE()'
-
-    # - name: Set up MySQL 5.7
-    #   uses: mirromutth/mysql-action@master
+    # - uses: ankane/setup-mysql@v1
     #   with:
-    #     mysql version: 5.7
-    #     mysql database: ${{ matrix.db_name }}
-    #     mysql root password: ${{ matrix.db_password }}
+    #     mysql-version: ${{ matrix.mysql-version }}
+    #     database: ${{ matrix.db_name }}
 
-    - name: Check MySQL Version
-      run: mysql -V
+    # - run: mysql --version
+    # - run: mysql -e 'SELECT VERSION()'
+    # - run: mysql -e 'SELECT CURRENT_USER()'
+    # - run: mysql -e 'SELECT DATABASE()'
+    # - run: mysql -e "SHOW VARIABLES LIKE 'socket'"
+    # - run: mysqladmin create testdb2
+    # - run: mysql -D testdb -e 'SELECT DATABASE()'
 
     - name: Composer install
       run: composer install --optimize-autoloader --prefer-dist
