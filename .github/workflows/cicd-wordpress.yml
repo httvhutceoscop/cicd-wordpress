@@ -9,50 +9,76 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ['7.2', '7.3']
 
     steps:
+    - name: Checkout
     - uses: actions/checkout@v2
 
-    - name: Install Apache
-      run: |
-        sudo apt-get update
-        sudo apt-get install apache2
-    
-    - name: Shutdown Ubuntu MySQL (SUDO)
-      run: sudo service mysql stop
-
-    - name: Set up MySQL 5.7
-      uses: mirromutth/mysql-action@master
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v1
       with:
-        mysql version: 5.7
-        mysql database: test
-        mysql root password: '123456'
+        php-version: ${{ matrix.php-versions }}
+        extension-csv: mbstring, intl #optional, setup extensions
+        ini-values-csv: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
+        coverage: xdebug #optional, setup coverage driver
+        pecl: false #optional, setup PECL
 
-    - name: Install SVN Server
-      run: |
-        sudo apt-get install subversion libapache2-mod-svn libapache2-svn libsvn-dev
-        sudo a2enmod dav dav_svn
-        sudo service apache2 restart
-        svn -h
+    - name: Check PHP Version
+      run: php -v
 
-    # - name: Validate composer.json and composer.lock
-    #   run: composer validate --strict
+    - name: Composer install
+      run: composer install --optimize-autoloader --prefer-dist
+    
+    - name: Install WP Tests
+      run: bash bin/install-wp-tests.sh wordpress_test root root localhost latest
+      
+    - name: phpunit tests
+      run: ./vendor/bin/phpunit
 
-    # - name: Cache Composer packages
-    #   id: composer-cache
-    #   uses: actions/cache@v2
+    # - name: Install Apache
+    #   run: |
+    #     sudo apt-get update
+    #     sudo apt-get install apache2
+    
+    # - name: Shutdown Ubuntu MySQL (SUDO)
+    #   run: sudo service mysql stop
+
+    # - name: Set up MySQL 5.7
+    #   uses: mirromutth/mysql-action@master
     #   with:
-    #     path: vendor
-    #     key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-php-
+    #     mysql version: 5.7
+    #     mysql database: test
+    #     mysql root password: '123456'
 
-    # - name: Install dependencies
-    #   run: composer install --prefer-dist --no-progress
+    # - name: Install SVN Server
+    #   run: |
+    #     sudo apt-get install subversion libapache2-mod-svn libapache2-svn libsvn-dev
+    #     sudo a2enmod dav dav_svn
+    #     sudo service apache2 restart
+    #     svn -h
 
-    # # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # # Docs: https://getcomposer.org/doc/articles/scripts.md
+    # # - name: Validate composer.json and composer.lock
+    # #   run: composer validate --strict
 
-    # - name: Run test suite
-    #   run: composer run-script test
+    # # - name: Cache Composer packages
+    # #   id: composer-cache
+    # #   uses: actions/cache@v2
+    # #   with:
+    # #     path: vendor
+    # #     key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+    # #     restore-keys: |
+    # #       ${{ runner.os }}-php-
+
+    # # - name: Install dependencies
+    # #   run: composer install --prefer-dist --no-progress
+
+    # # # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
+    # # # Docs: https://getcomposer.org/doc/articles/scripts.md
+
+    # # - name: Run test suite
+    # #   run: composer run-script test
