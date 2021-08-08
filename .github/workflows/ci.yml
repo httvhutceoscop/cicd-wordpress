@@ -60,4 +60,5 @@ jobs:
 
     - name: phpunit wp-content/plugins/*
       run: |
-        phpunit wp-content/plugins/sentius-map
+        cd wp-content/plugins/sentius-map
+        phpunit
