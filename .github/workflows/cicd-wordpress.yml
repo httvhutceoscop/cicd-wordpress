@@ -14,7 +14,7 @@ jobs:
       matrix:
         operating-system: [ubuntu-latest]
         php-versions: ['7.3']
-        db_name: ['wordpress_test']
+        db_name: ['wp_test']
         db_password: ['123456']
 
     steps:
