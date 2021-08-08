@@ -42,10 +42,10 @@ jobs:
       uses: shivammathur/setup-php@v1
       with:
         php-version: ${{ matrix.php-versions }}
-        extension-csv: mbstring, intl #optional, setup extensions
-        ini-values-csv: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
+        # extension-csv: mbstring, intl #optional, setup extensions
+        # ini-values-csv: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
         coverage: xdebug #optional, setup coverage driver
-        pecl: false #optional, setup PECL
+        # pecl: false #optional, setup PECL
 
     - name: Composer install
       run: |
@@ -62,7 +62,8 @@ jobs:
       run: bash ./wp-content/plugins/sentius-map/bin/install-wp-tests.sh ${{ matrix.db_name }} ${{ matrix.db_user }} ${{ matrix.db_password }} ${{ matrix.db_host }} ${{ matrix.wp_version }}
 
     - name: phpunit tests
-      run: phpunit
+      run: |
+        phpunit wp-content/plugins/sentius-map
 
     # # - name: Validate composer.json and composer.lock
     # #   run: composer validate --strict
