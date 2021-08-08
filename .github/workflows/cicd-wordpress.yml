@@ -28,7 +28,7 @@ jobs:
         mysql-version: ['5.7']
         db_name: ['testdb']
         db_user: ['root']
-        db_password: ['123456']
+        db_password: ['']
         db_host: ['localhost']
 
     steps:
@@ -39,9 +39,6 @@ jobs:
       with:
         mysql-version: ${{ matrix.mysql-version }}
         database: ${{ matrix.db_name }}
-
-    - run: mysql -e 'UPDATE mysql.user SET Password = PASSWORD("123456") where USER="root"'
-    # - run: telnet localhost 3306
 
     # - run: mysql --version
     # - run: mysql -e 'SELECT VERSION()'
