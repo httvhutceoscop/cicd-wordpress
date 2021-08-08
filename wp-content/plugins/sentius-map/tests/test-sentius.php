@@ -20,7 +20,7 @@ class SentiusTest extends WP_UnitTestCase
         // Replace this with some actual testing code.
         $string = 'Unit tests are sweet';
 
-        $this->assertEquals('Unit tests are sad', $string);
+        $this->assertEquals('Unit tests are sweet', $string);
     }
 
     public function setUp()
