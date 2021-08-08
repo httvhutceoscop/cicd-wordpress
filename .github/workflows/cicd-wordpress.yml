@@ -14,23 +14,35 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
+    - name: Install Apache
+      run: |
+        sudo apt-get update
+        sudo apt-get install apache2
+    
+    - name: Install SVN Server
+      run: |
+        sudo apt-get install subversion libapache2-mod-svn libapache2-svn libsvn-dev
+        sudo a2enmod dav dav_svn
+        sudo service apache2 restart
+        svn -h
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v2
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
+    # - name: Validate composer.json and composer.lock
+    #   run: composer validate --strict
 
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+    # - name: Cache Composer packages
+    #   id: composer-cache
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: vendor
+    #     key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-php-
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
+    # - name: Install dependencies
+    #   run: composer install --prefer-dist --no-progress
 
-    - name: Run test suite
-      run: composer run-script test
+    # # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
+    # # Docs: https://getcomposer.org/doc/articles/scripts.md
+
+    # - name: Run test suite
+    #   run: composer run-script test
