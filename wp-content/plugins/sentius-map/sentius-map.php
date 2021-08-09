@@ -59,23 +59,23 @@ class Sentius_Map
     private static function init_hooks()
     {
         self::$initiated = true;
-        add_action('admin_menu', array('Sentius_Map', 'vnt_option'));
-        add_action('init', array('Sentius_Map', 'vnt_add_settings'));
-    }
+        // Do stuff
 
-    public static function vnt_option()
-    {
-        add_menu_page('VNT Map', 'Map Settings', 'administrator', 'vnt_option', 'vnt_adjustments', 'dashicons-location-alt', 99);
-    }
-    public static function vnt_add_settings()
-    {
-        register_setting('vnt_gmap_setting', 'vnt_gmap_latitude');
-        register_setting('vnt_gmap_setting', 'vnt_gmap_longitude');
     }
 }
 
-add_action('init', array('Sentius_Map', 'init'));
+add_action('admin_menu', 'vnt_option');
+add_action('init', 'vnt_add_settings');
 
+function vnt_option()
+{
+    add_menu_page('VNT Map', 'Map Settings', 'administrator', 'vnt_option', 'vnt_adjustments', 'dashicons-location-alt', 99);
+}
+function vnt_add_settings()
+{
+    register_setting('vnt_gmap_setting', 'vnt_gmap_latitude');
+    register_setting('vnt_gmap_setting', 'vnt_gmap_longitude');
+}
 
 function vnt_adjustments()
 {
